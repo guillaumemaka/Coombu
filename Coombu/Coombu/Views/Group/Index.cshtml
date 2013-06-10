@@ -1,0 +1,58 @@
+﻿@model Coombu.Models.ViewModels.GroupPageViewModel
+
+
+<div class="span11">
+    @using (Html.BeginForm("Create", "Group", FormMethod.Post, new { @class = "inline well well-large" }))
+    {                    
+        @Html.ValidationMessage("GroupName",null, new {@class = "error" })        
+        <div class="input-append">
+            <input class="span8" data-val="true" data-val-required="@ViewRes.GroupStrings.ValidationRequiredMessage" id="GroupName" name="GroupName" placeholder="@ViewRes.GroupStrings.CreateButtonPlaceHolder" type="text" value="">
+            <input class="btn" type="submit" value="@ViewRes.GroupStrings.CreateSubmitButtonTitle" />
+        </div>
+    }
+
+    @foreach (var item in Model.Groups)
+    {
+        <div class="media well well-large">            
+            <div class="media-body">
+                <a href='@Url.Action("Detail", "Group", new { id = item.Group.GroupId })' class="btn btn-primary pull-right"><i class="icon-eye-open icon-white"></i></a>
+                @if (item.IsMember && !item.IsOwner)
+                {
+                    @Html.ActionLink(ViewRes.GroupStrings.Member, "Dissjoin", "Group", new { id = item.Group.GroupId }, new { @class = "dissjoin btn btn-success pull-right", id = item.Group.GroupId })
+                }else
+                {
+                    @Html.ActionLink(ViewRes.GroupStrings.Join, "Join", "Group", new { id = item.Group.GroupId }, new { @class = "join btn btn-primary pull-right", id = item.Group.GroupId })
+                }
+                
+                <h4 class="media-heading">@item.Group.GroupName</h4>
+                <dl class="dl-horizontal">
+                    <dt>@ViewRes.GroupStrings.Owner:</dt>
+                   <dd>
+                        @if (item.IsOwner)
+                        {
+                           var str = string.Format(ViewRes.GroupStrings.IsOwnerMessage, item.Group.Owner.FirstName, item.Group.Owner.LastName);
+                              @: @str
+                        }
+                        else
+                        {
+                          @: @item.Group.Owner.FirstName @item.Group.Owner.LastName
+                        }
+                    </dd>
+                    <dt>@ViewRes.GroupStrings.MemberCount</dt>
+                    <dd>@item.Group.Users.Count</dd>
+                </dl>                
+            </div>
+        </div>
+    }
+
+    @if (Model.Groups.Count == 0)
+    {
+        <div class="alert alert-info">
+            <i class="icon-info-sign"></i><em> @ViewRes.GroupStrings.NoGroupEntry</em>
+        </div>        
+    }
+</div>
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/coombu")
+}

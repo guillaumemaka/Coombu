@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <title>@ViewRes.SharedStrings.ApplicationTitle</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/themes/custom/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("styles", required:false)
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                <div style="margin: 20px;">
+                    <p class="site-title">@ViewRes.SharedStrings.ApplicationTitle[0]<span class="o1">@ViewRes.SharedStrings.ApplicationTitle[1]</span><span class="o2">@ViewRes.SharedStrings.ApplicationTitle[2]</span>@ViewRes.SharedStrings.ApplicationTitle.Substring(3)</p>
+                </div>
+             
+                @if (Request.IsAuthenticated)
+                {
+                    <div class="span5">
+                        <ul class="nav nav-pills" id="nav">
+                            <li class="@if (ViewContext.RouteData.Values["Controller"].ToString().ToLower().Equals("posts", StringComparison.OrdinalIgnoreCase))
+                                       {
+                                               @:active
+                                           }">@Html.ActionLink(ViewRes.SharedStrings.MenuHomeTitle, "Index", "Posts")</li>
+                            <li class="@if (ViewContext.RouteData.Values["Controller"].ToString().ToLower().Equals("group", StringComparison.OrdinalIgnoreCase))
+                                       {
+                                               @:active
+                                           }">@Html.ActionLink(ViewRes.SharedStrings.MenuGoupsTitle, "Index", "Group")</li>
+                            @Html.Partial("_LoginPartial")
+
+                        </ul>
+                    </div>
+                    
+                    <div class="offset7">
+                        @Html.Partial("_SearchFormPartial")
+                    </div>
+                
+                }
+            </div>
+        </div>
+        <div class="container">
+            <div class="span12">
+                <div class="row">
+                    @RenderBody()
+                    @RenderSection("sidebar", required: false)
+                </div>
+                
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <p>&copy; @DateTime.Now.Year - @ViewRes.SharedStrings.ApplicationTitle</p>
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,329 @@
+﻿<phone:PhoneApplicationPage
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Primitives="clr-namespace:Microsoft.Phone.Controls.Primitives;assembly=Microsoft.Phone" xmlns:ViewModel="clr-namespace:CoombuPhoneApp.ViewModel"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:Converters="clr-namespace:CoombuPhoneApp.Converters"
+    xmlns:local="clr-namespace:CoombuPhoneApp.Utils"
+    x:Class="CoombuPhoneApp.MainPage"
+    mc:Ignorable="d"
+    SupportedOrientations="Portrait"  Orientation="Portrait"
+    shell:SystemTray.IsVisible="False"
+    toolkit:TiltEffect.IsTiltEnabled="True">
+
+	<phone:PhoneApplicationPage.Resources>
+		<Converters:UserTitleConverter x:Key="UserTitleConverter"/>
+		<Converters:BoolToVisibility x:Key="BoolToVisibility"/>
+		<DataTemplate x:Key="UsersListDataTemplate">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+				<Image HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="100" Margin="5" Source="/Toolkit.Content/ApplicationBar.Light.People.png" Grid.RowSpan="2"/>
+				<StackPanel Grid.Column="1" Orientation="Horizontal" Grid.RowSpan="2" VerticalAlignment="Center">
+					<TextBlock TextWrapping="Wrap" Text="{Binding FirstName}" Style="{StaticResource PhoneTextContrastStyle}" Margin="12,0,12,51"/>
+					<TextBlock TextWrapping="Wrap" Text="{Binding LastName}" Style="{StaticResource PhoneTextContrastStyle}" Margin="12,0,12,51"/>
+				</StackPanel>
+				<StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
+					<TextBlock TextWrapping="Wrap" Text="{Binding Department}" Foreground="Gray" Margin="12,0,106,0" Height="27"/>
+				</StackPanel>
+			</Grid>
+		</DataTemplate>
+		<DataTemplate x:Key="GroupsListTemplate">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<Image HorizontalAlignment="Left" Height="84" VerticalAlignment="Top" Width="100" Source="/Toolkit.Content/ApplicationBar.Light.Group.png" Margin="5"/>
+				<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding GroupName}" VerticalAlignment="Center" Grid.Column="1" Style="{StaticResource PhoneTextContrastStyle}"/>
+			</Grid>
+		</DataTemplate>
+		<DataTemplate x:Key="PostsListDataTemplate">
+			<Grid Margin="0,0,0,5">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+				<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Title}" VerticalAlignment="Top" Style="{StaticResource EmptyListHeaderStyle}" Foreground="#FFBABABA"/>
+				<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding PrettyDate, Mode=OneWay}" VerticalAlignment="Top" Grid.Row="1" Style="{StaticResource PhoneTextAccentStyle}"/>
+				<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding ContentShort, Mode=OneWay}" VerticalAlignment="Top" Grid.Row="2" Style="{StaticResource PhoneTextContrastStyle}"/>
+				<StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="3" Orientation="Horizontal">
+					<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Likes}" VerticalAlignment="Center" Style="{StaticResource PhoneTextSmallStyle}" Margin="10,0,3,0" Foreground="Gray"/>
+					<TextBlock TextWrapping="Wrap" Text="{Binding LikePlaceHolder, Mode=OneWay}" Style="{StaticResource PhoneTextSmallStyle}" VerticalAlignment="Center" Foreground="Gray"/>
+				</StackPanel>
+			</Grid>
+		</DataTemplate>
+		<ControlTemplate x:Key="PanoramaControlTemplate1" TargetType="phone:Panorama">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="auto"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<Primitives:PanningBackgroundLayer x:Name="BackgroundLayer" Grid.RowSpan="2" HorizontalAlignment="Left">
+					<Border x:Name="background" Background="{TemplateBinding Background}" />
+				</Primitives:PanningBackgroundLayer>
+
+				<Primitives:PanningTitleLayer x:Name="TitleLayer" Grid.Row="0" HorizontalAlignment="Left"  Margin="10,-34,0,0"
+					Content="{TemplateBinding Title}" ContentTemplate="{TemplateBinding TitleTemplate}"
+					FontSize="170" FontFamily="{StaticResource PhoneFontFamilyLight}" CharacterSpacing="-35" Foreground="#FF660000" />
+
+				<Primitives:PanningLayer x:Name="ItemsLayer" Grid.Row="1" HorizontalAlignment="Left">
+					<ItemsPresenter x:Name="items"/>
+				</Primitives:PanningLayer>
+
+			</Grid>
+		</ControlTemplate>
+        <Style x:Key="NonParalaxPanorama" TargetType="phone:Panorama">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="phone:Panorama">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <local:NoParalaxBackgroundLayer x:Name="BackgroundLayer" 
+                 HorizontalAlignment="Left" Grid.RowSpan="2">
+                                <Border x:Name="background" 
+                    Background="{TemplateBinding Background}" 
+                    CacheMode="BitmapCache"/>
+                            </local:NoParalaxBackgroundLayer>
+                            <local:NoParalaxTitleLayer x:Name="TitleLayer" 
+                 CacheMode="BitmapCache" 
+                 ContentTemplate="{TemplateBinding TitleTemplate}" 
+                 Content="{TemplateBinding Title}" 
+                 FontSize="187" 
+                 FontFamily="{StaticResource PhoneFontFamilyLight}" 
+                 HorizontalAlignment="Left" 
+                 Margin="10,-76,0,9" Grid.Row="0"/>
+                            <Primitives:PanningLayer x:Name="ItemsLayer" 
+                 HorizontalAlignment="Left" Grid.Row="1">
+                                <ItemsPresenter x:Name="items"/>
+                            </Primitives:PanningLayer>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="PanoramaItemStyle1" TargetType="phone:PanoramaItem">
+			<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+			<Setter Property="VerticalContentAlignment" Value="Stretch"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="phone:PanoramaItem">
+						<Grid Background="{TemplateBinding Background}" Margin="12,0,0,0">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="auto"/>
+								<RowDefinition Height="*"/>
+							</Grid.RowDefinitions>
+							<ContentControl x:Name="header" CharacterSpacing="-35" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" FontSize="66" FontFamily="{StaticResource PhoneFontFamilySemiLight}" HorizontalAlignment="Left" Margin="12,-2,0,38" Foreground="#FF770000">
+								<ContentControl.RenderTransform>
+									<TranslateTransform x:Name="headerTransform"/>
+								</ContentControl.RenderTransform>
+							</ContentControl>
+							<ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" Grid.Row="1" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style x:Key="GridStyle1" TargetType="Grid">
+			<Setter Property="Background" Value="White"/>
+		</Style>				
+		<Style x:Key="TextBoxStyle1" TargetType="TextBox">
+			<Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilyNormal}"/>
+			<Setter Property="FontSize" Value="{StaticResource PhoneFontSizeMediumLarge}"/>
+			<Setter Property="Background" Value="{StaticResource PhoneTextBoxBrush}"/>
+			<Setter Property="Foreground" Value="{StaticResource PhoneTextBoxForegroundBrush}"/>
+			<Setter Property="BorderBrush" Value="{StaticResource PhoneTextBoxBrush}"/>
+			<Setter Property="SelectionBackground" Value="{StaticResource PhoneAccentBrush}"/>
+			<Setter Property="SelectionForeground" Value="{StaticResource PhoneTextBoxSelectionForegroundBrush}"/>
+			<Setter Property="BorderThickness" Value="{StaticResource PhoneBorderThickness}"/>
+			<Setter Property="Padding" Value="2"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="TextBox">
+						<Grid Background="Transparent">
+							<VisualStateManager.VisualStateGroups>
+								<VisualStateGroup x:Name="CommonStates">
+									<VisualState x:Name="Normal"/>
+									<VisualState x:Name="MouseOver"/>
+									<VisualState x:Name="Disabled">
+										<Storyboard>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="MainBorder">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="MainBorder">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneDisabledBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentElement">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneDisabledBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="ReadOnly">
+										<Storyboard>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="MainBorder">
+												<DiscreteObjectKeyFrame KeyTime="0">
+													<DiscreteObjectKeyFrame.Value>
+														<Visibility>Collapsed</Visibility>
+													</DiscreteObjectKeyFrame.Value>
+												</DiscreteObjectKeyFrame>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="ReadonlyBorder">
+												<DiscreteObjectKeyFrame KeyTime="0">
+													<DiscreteObjectKeyFrame.Value>
+														<Visibility>Visible</Visibility>
+													</DiscreteObjectKeyFrame.Value>
+												</DiscreteObjectKeyFrame>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="ReadonlyBorder">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneTextBoxBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ReadonlyBorder">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneTextBoxBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentElement">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneTextBoxReadOnlyBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+								</VisualStateGroup>
+								<VisualStateGroup x:Name="FocusStates">
+									<VisualState x:Name="Focused">
+										<Storyboard>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="MainBorder">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneTextBoxEditBackgroundBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="MainBorder">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneTextBoxEditBorderBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Unfocused"/>
+								</VisualStateGroup>
+							</VisualStateManager.VisualStateGroups>
+							<Border x:Name="MainBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Margin="{StaticResource PhoneTouchTargetOverhang}"/>
+							<Border x:Name="ReadonlyBorder" BorderBrush="{StaticResource PhoneDisabledBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="Transparent" Margin="{StaticResource PhoneTouchTargetOverhang}" Visibility="Collapsed"/>
+							<Border BorderBrush="Transparent" BorderThickness="{TemplateBinding BorderThickness}" Background="Transparent" Margin="{StaticResource PhoneTouchTargetOverhang}">
+								<ContentControl x:Name="ContentElement" BorderThickness="0" HorizontalContentAlignment="Stretch" Margin="{StaticResource PhoneTextBoxInnerMargin}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="Stretch"/>
+							</Border>
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</phone:PhoneApplicationPage.Resources>
+	<phone:PhoneApplicationPage.FontFamily>
+		<StaticResource ResourceKey="PhoneFontFamilyNormal"/>
+	</phone:PhoneApplicationPage.FontFamily>
+	<phone:PhoneApplicationPage.FontSize>
+		<StaticResource ResourceKey="PhoneFontSizeNormal"/>
+	</phone:PhoneApplicationPage.FontSize>
+	<phone:PhoneApplicationPage.Foreground>
+		<StaticResource ResourceKey="PhoneForegroundBrush"/>
+	</phone:PhoneApplicationPage.Foreground>
+
+    <!--Transitions-->
+    <toolkit:TransitionService.NavigationInTransition>
+        <toolkit:NavigationInTransition>
+            <toolkit:NavigationInTransition.Backward>
+                <toolkit:TurnstileFeatherTransition Mode="BackwardIn"/>
+            </toolkit:NavigationInTransition.Backward>
+            <toolkit:NavigationInTransition.Forward>
+                <!--
+                // This page contains relatively complex visuals that can slow down
+                // the UI thread while they are being rendered.
+                // Slightly delaying the turnstile feather transition using the BeginTime
+                // property makes the animation appear smooth by waiting for the 
+                // rendering process to finish.
+                -->
+                <toolkit:TurnstileFeatherTransition Mode="ForwardIn" BeginTime="0:0:0.7"/>
+            </toolkit:NavigationInTransition.Forward>
+        </toolkit:NavigationInTransition>
+    </toolkit:TransitionService.NavigationInTransition>
+    <toolkit:TransitionService.NavigationOutTransition>
+        <toolkit:NavigationOutTransition>
+            <toolkit:NavigationOutTransition.Backward>
+                <toolkit:TurnstileFeatherTransition Mode="BackwardOut"/>
+            </toolkit:NavigationOutTransition.Backward>
+            <toolkit:NavigationOutTransition.Forward>
+                <toolkit:TurnstileFeatherTransition Mode="ForwardOut"/>
+            </toolkit:NavigationOutTransition.Forward>
+        </toolkit:NavigationOutTransition>
+    </toolkit:TransitionService.NavigationOutTransition>
+
+    <!--LayoutRoot contient la grille racine où tout le contenu des autres pages est placé-->
+    <Grid x:Name="LayoutRoot" DataContext="{Binding Source={StaticResource Locator}}" Style="{StaticResource GridStyle1}">
+        <phone:Panorama Style="{StaticResource NonParalaxPanorama}" SelectionChanged="Panorama_SelectionChanged_1" Title="{Binding LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Template="{StaticResource PanoramaControlTemplate1}" Margin="10,10,-10,-10">
+
+            <!--Posts list-->
+            <phone:PanoramaItem Tag="0" Header="{Binding LocalizedResources.MainPageTitle, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PanoramaItemStyle1}" DataContext="{Binding WallPageViewModel, Mode=OneWay}">
+                <Grid Width="420">
+                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="{Binding Path=LocalizedResources.NoPostEntryString, Source={StaticResource LocalizedStrings}}" VerticalAlignment="Center" Visibility="{Binding HasEntry, Converter={StaticResource BoolToVisibility}}"/>
+            		<phone:LongListSelector toolkit:TurnstileFeatherEffect.FeatheringIndex="1" ItemTemplate="{StaticResource PostsListDataTemplate}" ItemsSource="{Binding Items}" SelectionChanged="LongListSelector_SelectionChanged_1"/>
+            	</Grid>
+            </phone:PanoramaItem>
+
+            <!--Groups list-->
+            <phone:PanoramaItem Tag="1" Header="{Binding LocalizedResources.GroupPageTitle, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PanoramaItemStyle1}" DataContext="{Binding GroupPageViewModel, Mode=OneWay}">
+                <Grid>
+                    <phone:LongListSelector toolkit:TurnstileFeatherEffect.FeatheringIndex="2" ItemTemplate="{StaticResource GroupsListTemplate}" ItemsSource="{Binding Items}" SelectionChanged="LongListSelector_SelectionChanged_2"/>
+                </Grid>
+            </phone:PanoramaItem>
+
+            <!--Users list-->
+            <phone:PanoramaItem Tag="2" Header="{Binding LocalizedResources.RelationsPageTitle, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PanoramaItemStyle1}">
+                <Grid>
+                	<Grid.RowDefinitions>
+                		<RowDefinition Height="Auto"/>
+                		<RowDefinition/>
+                	</Grid.RowDefinitions>
+                    <toolkit:AutoCompleteBox x:Name="SearchUserBox" LostFocus="SearchUserBox_LostFocus_1" SelectionChanged="AutoCompleteBox_SelectionChanged_1" SelectedItem="{Binding UserPageViewModel.SelectedUser, Mode=TwoWay, Source={StaticResource Locator}}" DataContext="{Binding Path=SearchResultPageViewModel, Source={StaticResource Locator}}" ItemsSource="{Binding SearchResult.SearchUserResult}" Text="{Binding SearchString, Mode=TwoWay}" BorderBrush="#FFBABABA" TextBoxStyle="{StaticResource TextBoxStyle1}" MinimumPrefixLength="4" IsTextCompletionEnabled="False">
+                        <toolkit:AutoCompleteBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Image HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="100" Margin="5" Source="/Toolkit.Content/ApplicationBar.Light.People.png" Grid.RowSpan="2"/>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Grid.RowSpan="2" VerticalAlignment="Center">
+                                        <TextBlock TextWrapping="Wrap" Text="{Binding}" Style="{StaticResource PhoneTextContrastStyle}" Margin="12,0,12,51"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
+                                        <TextBlock TextWrapping="Wrap" Text="{Binding Department}" Foreground="Gray" Margin="12,0,106,0" Height="27"/>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </toolkit:AutoCompleteBox.ItemTemplate>
+                    </toolkit:AutoCompleteBox>
+                    <phone:LongListSelector toolkit:TurnstileFeatherEffect.FeatheringIndex="3" DataContext="{Binding Path=RelationsPageViewModel, Source={StaticResource Locator}}" ItemTemplate="{StaticResource UsersListDataTemplate}" ItemsSource="{Binding Items}" SelectionChanged="LongListSelector_SelectionChanged_3" Grid.Row="1"/>
+                </Grid>
+            </phone:PanoramaItem>
+        </phone:Panorama>
+    </Grid>
+    <shell:SystemTray.ProgressIndicator>
+        <shell:ProgressIndicator IsIndeterminate="true" IsVisible="False" Text="Click me..." />
+    </shell:SystemTray.ProgressIndicator>
+</phone:PhoneApplicationPage>

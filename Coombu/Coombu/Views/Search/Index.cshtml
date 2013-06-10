@@ -1,0 +1,80 @@
+﻿@model Coombu.Models.ViewModels.SearchResultViewModel
+<div class="span12">
+    <div class="well well-large">
+        <div class="tabbable tabs-left">
+            <ul class="nav nav-tabs" id="search-tab">
+                <li><a href="#users" data-toggle="tab"><i class="icon-user"></i> @ViewRes.SearchStrings.TabPeopleTitle</a></li>
+                <li><a href="#statuses" data-toggle="tab"><i class="icon-th-list"></i> @ViewRes.SearchStrings.TabStatusTitle</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="users">
+                    <h5>@string.Format(ViewRes.SearchStrings.SearchUserResultMessage,Model.SearchString)</h5>
+                    <div>
+                        @if (@Model.SearchUserResult.Count > 0)
+                        {
+                        
+                            foreach (var user in Model.SearchUserResult)
+                            {                                 
+                                <div class="media">
+                                  <a class="pull-left" href="#">
+                                    <img class="media-object" src="/images/no_avatar.jpg">
+                                  </a>
+                                  <div class="media-body">
+                                    <h4 class="media-heading">@user.UserFullName</h4>                                    
+                                    <div class="media">
+                                        <strong>@ViewRes.SearchStrings.Department: </strong><i>@user.Department</i>
+                                        @if(@user.IsFollowed)
+                                        {
+                                            <a href="@Url.Action("Unfollow", "Users", new { id = @user.UserId})" id="@user.UserId" class="unfollow btn btn-success pull-right">@ViewRes.SearchStrings.UnFollow</a>
+                                        }else
+                                        {
+                                            <a href="@Url.Action("Follow", "Users", new { id = @user.UserId})" id="@user.UserId" class="follow btn btn-primary pull-right">@ViewRes.SearchStrings.Follow</a>   
+                                        }                                        
+                                    </div>
+                                  </div>
+                                </div>
+                            }
+                       
+                        }
+                        else
+                        {
+                            @ViewRes.SearchStrings.NoPeopleFound
+                        }
+
+                    </div>
+                </div>
+                <div class="tab-pane" id="statuses">
+                    <h5>@string.Format(ViewRes.SearchStrings.SearchStatusResultMessage,Model.SearchString)
+                    </h5>
+                    <div>
+                        @if (@Model.SearchPostResult.Count > 1)
+                        {
+                            foreach (var post in Model.SearchPostResult)
+                            { 
+                                @Html.Partial("_PostPartial", post)
+                            }
+                        }
+                        else
+                        {
+                            @ViewRes.SearchStrings.NoStatusFound
+    }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/coombu")
+    <script>        
+        $(function(){
+            $('#search-tab a:first').tab('show');
+        });
+    </script>
+
+}
+
+
+
+

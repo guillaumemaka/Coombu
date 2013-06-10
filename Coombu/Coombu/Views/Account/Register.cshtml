@@ -1,0 +1,67 @@
+﻿@model Coombu.Models.RegisterModel
+@{
+    ViewBag.Title = ViewRes.AccountStrings.Register;
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+    <h2>@ViewRes.AccountStrings.RegisterNewAccount</h2>
+</hgroup>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <legend>@ViewRes.AccountStrings.RegisterFormLegend</legend>
+        <div class="control-group">
+            <label class="control-label" for="LastName">@Html.LabelFor(m => m.LastName)</label>
+            <div class="controls">
+                @Html.TextBoxFor(m => m.LastName)
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="FirstName">@Html.LabelFor(m => m.FirstName)</label>
+            <div class="controls">
+                @Html.TextBoxFor(m => m.FirstName)
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="DateOfBirth">@Html.LabelFor(m => m.DateOfBirth)</label>
+            <div class="controls">
+                @Html.TextBoxFor(m => m.DateOfBirth)
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="EmailAddress">@Html.LabelFor(m => m.EmailAddress)</label>
+            <div class="controls">
+                @Html.TextBoxFor(m => m.EmailAddress)
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="UserName">@Html.LabelFor(m => m.UserName)</label>
+            <div class="controls">
+                @Html.TextBoxFor(m => m.UserName)
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="Password">@Html.LabelFor(m => m.Password)</label>
+            <div class="controls">
+                @Html.PasswordFor(m => m.Password)
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="ConfirmPassword">@Html.LabelFor(m => m.ConfirmPassword)</label>
+            <div class="controls">
+                @Html.PasswordFor(m => m.ConfirmPassword)
+            </div>
+        </div>
+
+        <input class="btn btn-primary" type="submit" value="@ViewRes.AccountStrings.Register" />
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

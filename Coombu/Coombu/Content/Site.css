@@ -1,0 +1,30 @@
+﻿
+/* site title
+----------------------------------------------------------*/
+.site-title {
+    color: #c8c8c8;
+    font-family: Rockwell, Consolas, "Courier New", Courier, monospace;
+    font-size: 4.3em; 
+    margin-bottom:10px;   
+}
+
+
+    .site-title, .site-title a, .site-title a:hover, .site-title a:active {
+        background: none;
+        outline: none;
+        text-decoration: none;
+        font-family: 'Segoe UI Light';
+        color: #A50000;
+        margin-bottom:30px;
+    }
+
+        .site-title .o1 {
+            font-family: 'Segoe UI';
+            color: #770000;
+        }
+
+        .site-title .o2 {
+            font-family: 'Segoe WP SemiLight';
+            color: #660000;
+        }
+

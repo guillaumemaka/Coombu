@@ -1,0 +1,75 @@
+﻿<phone:PhoneApplicationPage xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone" xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    x:Class="CoombuPhoneApp.RegistrationPage"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    shell:SystemTray.IsVisible="True" mc:Ignorable="d"
+    DataContext="{Binding Path=LoginRegistrrationViewModel.RegisterModel, Source={StaticResource Locator}}">
+	<phone:PhoneApplicationPage.Resources>
+		<ControlTemplate x:Key="DatePickerControlTemplate1" TargetType="toolkit:DatePicker">
+			<StackPanel>
+				<ContentControl
+					Content="{TemplateBinding Header}"
+					ContentTemplate="{TemplateBinding HeaderTemplate}"
+					Foreground="{StaticResource PhoneSubtleBrush}"
+					HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+					Margin="12,0,12,-4"/>
+				<Button
+					x:Name="DateTimeButton"
+					Content="{TemplateBinding ValueString}"
+					Background="{TemplateBinding Background}"
+					BorderThickness="{TemplateBinding BorderThickness}"
+					FontFamily="{TemplateBinding FontFamily}"
+					Foreground="{TemplateBinding Foreground}"
+					Height="72"
+					HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" BorderBrush="#FF726A6A" Margin="0,0,-13,0"/>
+			</StackPanel>
+		</ControlTemplate>
+	</phone:PhoneApplicationPage.Resources>
+
+    <!--LayoutRoot est la grille racine où tout le contenu de la page est placé-->
+    <Grid x:Name="LayoutRoot" Background="White" Style="{StaticResource CoombuGridStyle}">
+    	<Grid.ColumnDefinitions>
+    		<ColumnDefinition Width="11*"/>
+    		<ColumnDefinition Width="229*"/>
+    	</Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--TitlePanel contient le nom de l'application et le titre de la page-->
+
+        <!--TitlePanel contient le nom de l'application et le titre de la page-->
+        <StackPanel Grid.Row="0" Margin="12,17,0,28" Grid.ColumnSpan="2">
+            <TextBlock Text="{Binding LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Style="{StaticResource ApplicationTitleStyle}" Foreground="#FF660000"/>
+            <TextBlock Text="{Binding LocalizedRegistrationResources.PageTitle, Source={StaticResource LocalizedStrings}}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}" Foreground="#FF770000"/>
+        </StackPanel>
+
+        <!--ContentPanel - placez tout contenu supplémentaire ici-->
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0" Grid.ColumnSpan="2">
+        	<ScrollViewer>
+        		<StackPanel Width="456">
+        			<TextBlock TextWrapping="Wrap" Text="{Binding LocalizedRegistrationResources.LastNameString, Source={StaticResource LocalizedStrings}}" Style="{StaticResource LoginTextBoxStyle}"/>
+        			<TextBox Height="72" TextWrapping="Wrap" Text="{Binding LastName, Mode=TwoWay}" Style="{StaticResource LoginTextFieldStyle}"/>
+        			<TextBlock TextWrapping="Wrap" Text="{Binding LocalizedRegistrationResources.FirstNameString, Source={StaticResource LocalizedStrings}}" Style="{StaticResource LoginTextBoxStyle}"/>
+        			<TextBox Height="72" TextWrapping="Wrap" Text="{Binding FirstName, Mode=TwoWay}" Style="{StaticResource LoginTextFieldStyle}"/>
+        			<TextBlock TextWrapping="Wrap" Text="{Binding LocalizedRegistrationResources.DateOfBirthString, Source={StaticResource LocalizedStrings}}" Style="{StaticResource LoginTextBoxStyle}"/>
+        			<toolkit:DatePicker Foreground="Black" BorderBrush="Gray" Margin="0,0,10,0" Value="{Binding DateOfBirth, Mode=TwoWay}" Template="{StaticResource DatePickerControlTemplate1}"/>
+        			<TextBlock TextWrapping="Wrap" Text="{Binding LocalizedRegistrationResources.EmailAddressString, Source={StaticResource LocalizedStrings}}" Style="{StaticResource LoginTextBoxStyle}"/>
+        			<TextBox Height="72" TextWrapping="Wrap" Text="TextBox" Style="{StaticResource LoginTextFieldStyle}"/>
+        			<TextBlock TextWrapping="Wrap" Text="{Binding LocalizedRegistrationResources.UsernameString, Source={StaticResource LocalizedStrings}}" Style="{StaticResource LoginTextBoxStyle}"/>
+        			<TextBox Height="72" TextWrapping="Wrap" Text="TextBox" Style="{StaticResource LoginTextFieldStyle}"/>
+        			<TextBlock TextWrapping="Wrap" Text="{Binding LocalizedRegistrationResources.PasswordString, Source={StaticResource LocalizedStrings}}" Style="{StaticResource LoginTextBoxStyle}"/>
+        			<TextBox Height="72" TextWrapping="Wrap" Text="TextBox" Style="{StaticResource LoginTextFieldStyle}"/>
+        			<TextBlock TextWrapping="Wrap" Text="{Binding LocalizedRegistrationResources.ConfirmPasswordString, Source={StaticResource LocalizedStrings}}" Style="{StaticResource LoginTextBoxStyle}"/>
+        			<TextBox Height="72" TextWrapping="Wrap" Text="TextBox" Style="{StaticResource LoginTextFieldStyle}"/>
+        			<Button Content="{Binding LocalizedRegistrationResources.RegisterString, Source={StaticResource LocalizedStrings}}" Style="{StaticResource CoombuButtonStyle}"/>
+        		</StackPanel>
+        	</ScrollViewer>
+
+        </Grid>
+    </Grid>
+
+</phone:PhoneApplicationPage>

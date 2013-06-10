@@ -1,0 +1,59 @@
+﻿@model Coombu.Models.LoginModel
+
+@{
+    ViewBag.Title = ViewRes.AccountStrings.LoginPageTitle;
+}
+
+ <h1>@ViewBag.Title.</h1>
+<div class="span5 well">
+    <h3>@ViewRes.AccountStrings.LoginSubTitlePage</h3>
+    @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <fieldset>
+            <legend>@ViewRes.AccountStrings.LoginFormTitle</legend>
+            <div>
+                <div class="control-group">                    
+                    @Html.LabelFor(m => m.UserName, new {@class = "control-label" })
+                    <div class="controls">
+                        @Html.TextBoxFor(m => m.UserName)
+                        @Html.ValidationMessageFor(m => m.UserName, String.Empty, new { @class = "help-inline error" })
+                    </div>
+                </div>
+                <div class="control-group">                    
+                    @Html.LabelFor(m => m.Password, new {@class = "control-label" })
+                    <div class="controls">
+                        @Html.PasswordFor(m => m.Password)
+                        @Html.ValidationMessageFor(m => m.Password, String.Empty, new {@class = "help-inline error" })
+                    </div>
+                </div>                             
+                <div>
+                    <label class="checkbox">
+                        @Html.CheckBoxFor(m => m.RememberMe)
+                        @Html.LabelFor(m => m.RememberMe)
+                    </label>
+                </div>
+            </div>
+            <div class="form-actions">
+                <input class="btn btn-primary" type="submit" value="@ViewRes.AccountStrings.LoginFormSubmitButtonTitle" />
+            </div>
+        </fieldset>
+        
+    }
+</div>
+
+<div class="span5 well well-large">
+    <h3>Nouvel utilisateur</h3>
+    <div>
+        @Html.ActionLink("S'inscrire", "Register", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, new { @class = "btn btn-large btn-primary" })
+    </div>
+    <div class="well">
+        @Html.Action("Register");
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

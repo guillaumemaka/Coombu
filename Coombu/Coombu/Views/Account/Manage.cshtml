@@ -1,0 +1,32 @@
+﻿@model Coombu.Models.LocalPasswordModel
+@{
+    ViewBag.Title = ViewRes.AccountStrings.ManagePageTitle;
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+</hgroup>
+
+<p class="message-success">@ViewBag.StatusMessage</p>
+
+<p>@string.Format(ViewRes.AccountStrings.ManageMessageConnectAs,User.Identity.Name)</p>
+
+@if (ViewBag.HasLocalPassword)
+{
+    @Html.Partial("_ChangePasswordPartial")
+}
+else
+{ 
+    @Html.Partial("_SetPasswordPartial")
+}
+
+<section id="externalLogins">
+    @Html.Action("RemoveExternalLogins")
+
+    <h3>@ViewRes.AccountStrings.ManageAddExternalConnection</h3>
+    @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

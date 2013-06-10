@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Coombu.Models.ViewModels.GroupViewModel>
+
+<ul class="unstyled">
+    @foreach(var item in Model){
+        <li>
+            @Html.ActionLink(item.Group.GroupName, "Detail", "Group", new { id = item.Group.GroupId },null) (
+            @if(item.IsOwner)
+            {
+                @ViewRes.SharedStrings.Owner;
+            }else if (item.IsMember){
+                @ViewRes.SharedStrings.Member;
+            }
+            )
+        </li>
+    }
+</ul>

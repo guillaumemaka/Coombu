@@ -1,0 +1,129 @@
+﻿<phone:PhoneApplicationPage
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Primitives="clr-namespace:Microsoft.Phone.Controls.Primitives;assembly=Microsoft.Phone"
+    x:Class="CoombuPhoneApp.GroupMainPage"
+    mc:Ignorable="d"
+    SupportedOrientations="Portrait"  Orientation="Portrait"
+    shell:SystemTray.IsVisible="False"
+    DataContext="{Binding GroupPageViewModel, Source={StaticResource Locator}}"
+    Loaded="PhoneApplicationPage_Loaded_1">
+
+    <phone:PhoneApplicationPage.Resources>
+        <Style x:Key="ItemsPresenterStyle1" TargetType="ItemsPresenter"/>
+        <ControlTemplate x:Key="PanoramaControlTemplate1" TargetType="phone:Panorama">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Primitives:PanningBackgroundLayer x:Name="BackgroundLayer" Grid.RowSpan="2" HorizontalAlignment="Left">
+                    <Border x:Name="background" Background="{TemplateBinding Background}" />
+                </Primitives:PanningBackgroundLayer>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" VerticalAlignment="Top" Foreground="#FF660000" Margin="20,0,0,0" FontSize="20"/>
+
+                <Primitives:PanningTitleLayer x:Name="TitleLayer" Grid.Row="0" HorizontalAlignment="Left"  Margin="10,0,0,5" ContentTemplate="{TemplateBinding TitleTemplate}"
+					FontSize="170" FontFamily="{StaticResource PhoneFontFamilyLight}" CharacterSpacing="-35" Foreground="#FF660000" Content="{Binding SelectedItem.GroupName}" />
+
+                <Primitives:PanningLayer x:Name="ItemsLayer" Grid.Row="1" HorizontalAlignment="Left">
+                    <ItemsPresenter x:Name="items" Style="{StaticResource ItemsPresenterStyle1}"/>
+                </Primitives:PanningLayer>
+
+            </Grid>
+        </ControlTemplate>
+        <Style x:Key="PanoramaItemStyle1" TargetType="phone:PanoramaItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="phone:PanoramaItem">
+                        <Grid Background="{TemplateBinding Background}" Margin="12,0,0,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <ContentControl x:Name="header" CharacterSpacing="-35" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" FontSize="66" FontFamily="{StaticResource PhoneFontFamilySemiLight}" HorizontalAlignment="Left" Margin="12,-2,0,38" Foreground="#FF770000">
+                                <ContentControl.RenderTransform>
+                                    <TranslateTransform x:Name="headerTransform"/>
+                                </ContentControl.RenderTransform>
+                            </ContentControl>
+                            <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" Grid.Row="1" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <DataTemplate x:Key="PostsListDataTemplate">
+        	<Grid Margin="0,0,0,5">
+        		<Grid.RowDefinitions>
+        			<RowDefinition Height="Auto"/>
+        			<RowDefinition Height="Auto"/>
+        			<RowDefinition/>
+        			<RowDefinition Height="Auto"/>
+        		</Grid.RowDefinitions>
+        		<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Title}" VerticalAlignment="Top" Style="{StaticResource EmptyListHeaderStyle}" Foreground="#FFBABABA"/>
+        		<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding PrettyDate, Mode=OneWay}" VerticalAlignment="Top" Grid.Row="1" Style="{StaticResource PhoneTextAccentStyle}"/>
+        		<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding ContentShort, Mode=OneWay}" VerticalAlignment="Top" Grid.Row="2" Style="{StaticResource PhoneTextContrastStyle}"/>
+        		<StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="3" Orientation="Horizontal">
+        			<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Likes}" VerticalAlignment="Center" Style="{StaticResource PhoneTextSmallStyle}" Margin="10,0,3,0" Foreground="Gray"/>
+        			<TextBlock TextWrapping="Wrap" Text="{Binding LikePlaceHolder, Mode=OneWay}" Style="{StaticResource PhoneTextSmallStyle}" VerticalAlignment="Center" Foreground="Gray"/>
+        		</StackPanel>
+        	</Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="UsersListDataTemplate">
+        	<Grid>
+        		<Grid.ColumnDefinitions>
+        			<ColumnDefinition Width="Auto"/>
+        			<ColumnDefinition/>
+        		</Grid.ColumnDefinitions>
+        		<Grid.RowDefinitions>
+        			<RowDefinition Height="Auto"/>
+        			<RowDefinition Height="Auto"/>
+        		</Grid.RowDefinitions>
+        		<Image HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="100" Margin="5" Source="/Toolkit.Content/ApplicationBar.Light.People.png" Grid.RowSpan="2"/>
+        		<StackPanel Grid.Column="1" Orientation="Horizontal" Grid.RowSpan="2" VerticalAlignment="Center">
+        			<TextBlock TextWrapping="Wrap" Text="{Binding FirstName}" Style="{StaticResource PhoneTextContrastStyle}" Margin="12,0,12,51"/>
+        			<TextBlock TextWrapping="Wrap" Text="{Binding LastName}" Style="{StaticResource PhoneTextContrastStyle}" Margin="12,0,12,51"/>
+        		</StackPanel>
+        		<StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
+        			<TextBlock TextWrapping="Wrap" Text="{Binding Department}" Foreground="Gray" Margin="12,0,106,0" Height="27"/>
+        		</StackPanel>
+        	</Grid>
+        </DataTemplate>
+    </phone:PhoneApplicationPage.Resources>
+    <phone:PhoneApplicationPage.FontFamily>
+        <StaticResource ResourceKey="PhoneFontFamilyNormal"/>
+    </phone:PhoneApplicationPage.FontFamily>
+    <phone:PhoneApplicationPage.FontSize>
+        <StaticResource ResourceKey="PhoneFontSizeNormal"/>
+    </phone:PhoneApplicationPage.FontSize>
+    <phone:PhoneApplicationPage.Foreground>
+        <StaticResource ResourceKey="PhoneForegroundBrush"/>
+    </phone:PhoneApplicationPage.Foreground>
+
+    <!--LayoutRoot contient la grille racine où tout le contenu des autres pages est placé-->
+    <Grid x:Name="LayoutRoot" Background="White">
+        <phone:Panorama SelectionChanged="Panorama_SelectionChanged_1" Title="{Binding SelectedItem.GroupName}" Template="{StaticResource PanoramaControlTemplate1}">
+
+            <!--Élément un de panorama-->
+            <phone:PanoramaItem Tag="0" Header="{Binding Path=LocalizedResources.MainPageTitle, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PanoramaItemStyle1}">
+                <Grid>
+                    <phone:LongListSelector SelectionChanged="LongListSelector_SelectionChanged_1" ItemsSource="{Binding Posts}" ItemTemplate="{StaticResource PostsListDataTemplate}"/>
+                </Grid>
+            </phone:PanoramaItem>
+
+            <!--Élément deux de panorama-->
+            <phone:PanoramaItem Tag="1" Header="{Binding Path=LocalizedResources.MembersString, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PanoramaItemStyle1}">
+                <Grid>
+                    <phone:LongListSelector ItemsSource="{Binding Path=SelectedItem.Users}" ItemTemplate="{StaticResource UsersListDataTemplate}" SelectionChanged="LongListSelector_SelectionChanged_2"/>
+                </Grid>
+            </phone:PanoramaItem>
+        </phone:Panorama>
+    </Grid>
+
+</phone:PhoneApplicationPage>

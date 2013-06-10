@@ -1,0 +1,66 @@
+﻿@model Coombu.Models.ViewModels.PostsIndexViewModel
+@{
+    ViewBag.Title = @ViewBag.UserFullName;
+}
+<div id="posts" class="span8">
+    @Html.Partial("_CreatePostPartial", Model.Form)
+
+
+    @if (Model.PagedPostList.Posts.Count > 0)
+    {
+        foreach (var item in Model.PagedPostList.Posts)
+        {
+            @Html.Partial("_PostPartial",item)
+        }
+        <a id="next" href="@Model.PagedPostList.NextPageUrl"></a>
+    }
+    else
+    {
+        <p class="well well-large">
+            <i>@ViewRes.PostStrings.NoEntry</i> 
+        </p>        
+    }
+
+</div>
+
+@section sidebar {
+    <div class="span3 well">        
+        <h5>Ceux qui vous suivent</h5>
+        @Html.Partial("_UserListPartial",@Model.PagedPostList.User.Followers)
+        <h5>Vous suivez</h5>
+        @Html.Partial("_UserListPartial",@Model.PagedPostList.User.Followees)
+        <h5>Groupes:</h5>
+        @Html.Partial("_GroupListPartial",@Model.Groups)
+    </div>
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/coombu")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/jquery-ui-input-file")
+
+    @Scripts.Render("~/bundles/infinitescroll")    
+    <script>
+        $(function () {
+            $("#posts").infinitescroll({
+                behavior: 'local',
+                dataType: 'json',
+                navSelector: "#next:last",
+                nextSelector: "a#next:last",
+                itemSelector: "#posts div.media"
+                
+            }, function (newElements, data, opts) {
+                console.log(data);
+            });
+
+            $("input[type=file]").customFileInput({
+                button_position: "right"
+            });
+        });
+    </script>
+}
+
+@section styles{
+    @Styles.Render("~/bundles/jquery-ui-input-file/css")  
+    }

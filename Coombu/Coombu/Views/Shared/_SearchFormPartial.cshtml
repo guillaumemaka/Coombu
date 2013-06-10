@@ -1,0 +1,9 @@
+﻿@if (Request.IsAuthenticated)
+{
+    <form class="form-search" action='@Url.Action("Index", "Search")' method="post">
+        <div class="input-append">
+            <input name="q" type="text" class="span3 search-query" placeholder="@ViewRes.SharedStrings.SearchInputPlaceHolder">
+            <button type="submit" class="btn">@ViewRes.SharedStrings.SearchFormSubmitButtonTitle</button>
+        </div>
+    </form>
+}

@@ -1,0 +1,18 @@
+﻿@if (Request.IsAuthenticated)
+{
+    <li class="dropdown">
+        <a class="dropdown-toggle"
+            data-toggle="dropdown"
+            href="#">@string.Format(ViewRes.SharedStrings.MenuUserTitle,User.Identity.Name)
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+            <li><a href='@Url.Action("Manage", "Account")'><i class="icon-user"></i> @ViewRes.SharedStrings.YourAccount</a></li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="icon-off"></i> @ViewRes.SharedStrings.Logout</a></li>
+        </ul>
+    </li>
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { @class = "inline", id = "logoutForm" }))
+    {
+        @Html.AntiForgeryToken()            
+    }   
+}

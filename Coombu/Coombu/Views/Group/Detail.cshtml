@@ -1,0 +1,64 @@
+﻿@model Coombu.Models.ViewModels.DetailGroupViewModel
+
+<div class="span11">
+    <div>
+        <h2>@string.Format(ViewRes.GroupStrings.StringGroup,Model.GroupViewModel.Group.GroupName)</h2>
+    </div>
+</div>
+<div id="posts" class="span8">
+
+    @Html.Partial("_CreatePostPartial", @Model.CreatePostModel)
+
+    @if (Model.GroupViewModel.Group.Posts.Count > 0)
+    {
+        foreach (var item in Model.GroupViewModel.Group.Posts)
+        {
+        @Html.Partial("_PostPartial", item)
+        }
+
+    }
+    else
+    {
+        <p class="well well-large">
+            <i>@ViewRes.GroupStrings.NoEntry</i>
+        </p>        
+    }
+</div>
+<div class="span3 well">
+    <h3>@ViewRes.GroupStrings.Owner:</h3>
+    <a href='@Url.Action("Index", "Users", new { id = @Model.GroupViewModel.Group.Owner.UserId })'>
+        <div class="media">
+            <span class="pull-left">
+                <img style="width: 32px; height: 32px" class="media-object" src="/images/no_avatar.jpg">
+            </span>
+            <div class="media-body">
+                @Model.GroupViewModel.Group.Owner.FirstName @Model.GroupViewModel.Group.Owner.LastName
+            </div>
+        </div>
+    </a>
+
+    <h3>@ViewRes.GroupStrings.Members:</h3>
+    @if (Model.GroupViewModel.Group.Users.Count > 0)
+    {                       
+        @Html.Partial("_UserListPartial", Model.GroupViewModel.Group.Users)
+    }
+    else
+    { 
+        <em>@ViewRes.GroupStrings.NoEntry</em>
+    }
+</div>
+
+@section scripts {
+    @Scripts.Render("~/bundles/jquery-ui-input-file")
+    <script type="text/javascript">
+        $(function () {
+            $("input[type=file]").customFileInput({
+                button_position: "right"
+            });
+        });
+    </script>
+}
+
+@section styles{
+    @Styles.Render("~/bundles/jquery-ui-input-file/css")
+}

@@ -1,0 +1,124 @@
+﻿@model Coombu.Models.Post
+
+<div id="post-@Model.PostId" class="media well well-large">
+
+    @* Check if the current user is the owner of the post *@
+    @if (User.Identity.Name.Equals(Model.User.UserName, StringComparison.Ordinal))
+    {
+        <div class="btn-group pull-right">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-edit"></i>
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="delete-post" id="@Model.PostId" href="#"><i class="icon-trash"></i>Supprimer</a></li>
+            </ul>
+        </div>
+    }
+
+    <div class="media-body">
+        <h4 class="media-heading">
+            @{
+                var str = "";
+                
+                var userLink = Html.ActionLink(string.Format("{0} {1}", Model.User.FirstName, Model.User.LastName), "Index", "Users", new { id = Model.UserId },null);
+                                
+                if (Model.Group != null && !ViewContext.RouteData.Values["Controller"].ToString().Equals("group", StringComparison.OrdinalIgnoreCase))
+                {
+                    var groupLink = Html.ActionLink(Model.Group.GroupName, "Detail", "Group", new { id = Model.Group.GroupId },null);
+                    str = string.Format(ViewRes.SharedStrings.PostHeaderIfPostedInGroup, groupLink, Html.Raw(userLink));
+                }
+                else
+                {
+                    str = string.Format(ViewRes.SharedStrings.PostHeaderIfPostedOnUserPage, userLink);
+                }               
+            }
+
+            @Html.Raw(str)
+        </h4>
+        <h5><em>@Html.DisplayFor(m => m.PostedAt)</em></h5>
+
+        <p class="clearfix">
+            @Html.DisplayFor(m => m.Content)
+        </p>
+
+        @if (!Model.Picture.IsEmpty())
+        { 
+            <div style="margin-bottom: 5px;">
+                <img class="media-object" src="@Model.Picture" />
+            </div>
+        }
+
+        <p class="post-@Model.PostId clearfix">
+
+            @if (@Model.IsLiked)
+            {
+                <a href="#" class="disslike" id="@Model.PostId"><i class="icon-thumbs-down"></i><span>@ViewRes.SharedStrings.Disslike</span></a>
+            }
+            else
+            {
+                <a href="#" class="like" id="@Model.PostId"><i class="icon-thumbs-up"></i><span>@ViewRes.SharedStrings.Like</span></a>    
+            }
+            @if (Model.Likes.Count > 1)
+            {
+                <span id="badge-@Model.PostId" class="badge badge-info">@Model.Likes.Count</span> <span class="output-@Model.PostId">@ViewRes.SharedStrings.LikePluralizeMessage</span>
+            }
+            else if (Model.Likes.Count == 1)
+            {
+                <span id="badge-@Model.PostId" class="badge badge-info">1</span> <span class="output-@Model.PostId">@ViewRes.SharedStrings.LikeSingularMessage</span>
+            }
+            else
+            {
+                <span id="badge-@Model.PostId" class="badge badge-info"></span> <span class="output-@Model.PostId"></span>
+            }
+        </p>
+        <ul class="media-list">
+            <li class="media">
+                <div id="post-@Model.PostId-comments" class="media-body">
+                    <h4 class="media-heading">Commentaires:</h4>
+                    @foreach (var comment in @Model.Comments)
+                    {
+                        
+                        <div id="comment-@comment.CommentId" class="media">
+
+                            @* Check if the current user is the owner of the comment *@
+
+                            @if (User.Identity.Name.Equals(@comment.User.UserName, StringComparison.Ordinal))
+                            {
+                                <div class="btn-group pull-right">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-edit"></i></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a id="@comment.CommentId" class="delete-comment"  href="#"><i class="icon-trash"></i>Supprimer</a></li>
+                                    </ul>
+                                </div>
+                            }
+                            <span class="pull-left">
+                                <img class="media-object" style="width: 64px; height: 64px;" src="/images/no_avatar.jpg" />
+                            </span>
+                            <div class="media-body">
+                                <h4 class="media-heading">@comment.User.FirstName @comment.User.LastName</h4>
+                                <strong>@comment.CommentedAt.ToLongDateString()</strong>
+                                <div class="comment-content">
+                                    @comment.Content
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </li>
+        </ul>
+        <div class="media">
+            <span class="pull-left">
+                <img class="media-object" style="width: 64px; height: 64px;" src="/images/no_avatar.jpg" />
+            </span>
+            @using (@Html.BeginForm("Create", "Comments", routeValues: null, htmlAttributes: new { @class = "span5 form-inline comment" }, method: FormMethod.Post))
+            {
+                <input type="hidden" name="PostId" value="@Model.PostId" />
+                <textarea class="span5" name="Content" placeholder="@ViewRes.SharedStrings.CommentFormTextareaPlaceHolder" row="3"></textarea>              
+                <input type="submit" class="btn" value="@ViewRes.SharedStrings.CommentFormSubmitButton" />                    
+            }
+        </div>
+    </div>
+</div>
+
+

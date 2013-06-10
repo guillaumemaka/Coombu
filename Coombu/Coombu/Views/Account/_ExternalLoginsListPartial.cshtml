@@ -1,0 +1,24 @@
+﻿@model ICollection<AuthenticationClientData>
+
+@if (Model.Count == 0)
+{
+    <div class="message-info">
+        <p>@ViewRes.AccountStrings.ExternalLoginMessageInfo</p>
+    </div>
+}
+else
+{
+    using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }))
+    {
+    @Html.AntiForgeryToken()
+    <fieldset id="socialLoginList">
+        <legend>@ViewRes.AccountStrings.ExternalLoginLegend</legend>
+        <p>
+        @foreach (AuthenticationClientData p in Model)
+        {
+            <button type="submit" name="provider" value="@p.AuthenticationClient.ProviderName" title="@string.Format(ViewRes.AccountStrings.LoginFormSubmitButtonTitle,p.DisplayName)">@p.DisplayName</button>
+        }
+        </p>
+    </fieldset>
+    }
+}

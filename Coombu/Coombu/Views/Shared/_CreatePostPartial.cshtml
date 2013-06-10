@@ -1,0 +1,26 @@
+﻿@model Coombu.Models.ViewModels.PostViewModelCreate
+
+@using (Html.BeginForm(
+    "Create", "Posts", FormMethod.Post, new {@class="well well-large", enctype = "multipart/form-data" }))
+{               
+    @Html.HiddenFor(m => m.GroupId)
+    <div class="control-group">        
+        <div class="controls">
+            @Html.TextAreaFor(m => m.Content, new {@class="span7", rows = 5,cols=100, placeholder =  string.Format(ViewRes.SharedStrings.CreatePostTextareaPlaceHolder,@User.Identity.Name) })
+            <p>
+                @Html.ValidationMessageFor(m => m.Content, null ,new { @class="error" })
+            </p>
+        </div>        
+    </div>
+    <div class="control-group error">
+        <div class="controls">
+            <input type="file" name="File" />
+            @Html.ValidationMessageFor(m => m.File)
+        </div>
+    </div>  
+    <div>
+        <input class="btn btn-primary" type="submit" value="@ViewRes.SharedStrings.CreatePostFormSubmitButtonTitle" />
+    </div>
+            
+}
+

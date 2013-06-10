@@ -1,0 +1,19 @@
+﻿@model IEnumerable<Coombu.Models.UserProfile>
+
+@foreach(var user in Model)
+{
+    <a href='@Url.Action("Index", "Users", new { id = @user.UserId })'>
+        <div class="media">
+        <span class="pull-left">
+            <img style="width:32px;height:32px" class="media-object" src="/images/no_avatar.jpg">
+        </span>
+        <div class="media-body">
+            @user.FirstName @user.LastName
+        </div>
+    </div>
+    </a>    
+}
+@if (Model.Count() == 0)
+{
+    <em>@ViewRes.SharedStrings.NoEntry</em>
+}
