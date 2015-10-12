@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Microsoft.Azure;
+using Microsoft.WindowsAzure.ServiceRuntime;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using Microsoft.WindowsAzure;
 
 
 namespace Coombu.Models
 {
     public class CoombuContext : DbContext
     {
-        public CoombuContext() : base(CloudConfigurationManager.GetSetting("DbContext")) { }
+        public CoombuContext() : base(RoleEnvironment.GetConfigurationSettingValue("CoombuConnectionString")) { }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Group> Groups { get; set; }

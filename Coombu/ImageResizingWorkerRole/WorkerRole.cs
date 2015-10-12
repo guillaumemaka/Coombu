@@ -1,18 +1,16 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Drawing;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Diagnostics;
-using Microsoft.WindowsAzure.ServiceRuntime;
-using Microsoft.WindowsAzure.StorageClient;
 using System.IO;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using Coombu.Utils;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Queue;
+using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.WindowsAzure.ServiceRuntime;
 
 namespace ImageResizingWorkerRole
 {
@@ -32,7 +30,6 @@ namespace ImageResizingWorkerRole
 
             while (true)
             {
-                Thread.Sleep(5000);
                 Trace.WriteLine("Image Resizing Worker Role Working", "Information");
                 CloudQueueMessage message = queue.GetMessage(new TimeSpan(0, 5, 0));
                 
@@ -69,16 +66,16 @@ namespace ImageResizingWorkerRole
 
             // Pour plus d'informations sur la gestion des modifications de configuration
             // consultez la rubrique MSDN à l'adresse http://go.microsoft.com/fwlink/?LinkId=166357.
-            accountStorage = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
+            accountStorage = CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue("StorageConnectionString"));
             queueClient = accountStorage.CreateCloudQueueClient();
 
-            queue = queueClient.GetQueueReference(CloudConfigurationManager.GetSetting("QueueName"));
-            queue.CreateIfNotExist();
+            queue = queueClient.GetQueueReference(RoleEnvironment.GetConfigurationSettingValue("QueueName"));
+            queue.CreateIfNotExists();
 
             blobClient = accountStorage.CreateCloudBlobClient();
-            blobContainer = blobClient.GetContainerReference(CloudConfigurationManager.GetSetting("ContainerName"));
+            blobContainer = blobClient.GetContainerReference(RoleEnvironment.GetConfigurationSettingValue("ContainerName"));
 
-            blobContainer.CreateIfNotExist();            
+            blobContainer.CreateIfNotExists();            
 
             return base.OnStart();
         }
